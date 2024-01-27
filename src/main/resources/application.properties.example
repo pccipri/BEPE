@@ -1,0 +1,11 @@
+#DB URL
+spring.datasource.url=
+#DB Username
+spring.datasource.username=
+#DB Password
+spring.datasource.password=
+#DB Driver type(this example is for mariadb)
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+
+#After completing with your DB connection information remove the .example part of the file name
+# The name of the file should be application-dev.properties
