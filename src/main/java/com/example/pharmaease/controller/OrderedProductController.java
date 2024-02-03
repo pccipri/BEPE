@@ -33,6 +33,12 @@ public class OrderedProductController {
     OrderedProduct getOrderedProductsById(@PathVariable Integer id) {
 
         return orderedProductRepository.findById(id)
+                .map(orderedProduct -> {
+                    // Force lazy loading of the userType
+                    orderedProduct.getOrder_id().getTotal_price();
+                    orderedProduct.getProduct_id().getName(); // This triggers the database query
+                    return orderedProduct;
+                })
                 .orElseThrow();
     }
 
@@ -45,8 +51,8 @@ public class OrderedProductController {
     OrderedProduct replaceOrderedProduct(@RequestBody OrderedProduct newOrderedProduct, @PathVariable Integer id) {
         return orderedProductRepository.findById(id)
                 .map(orderedProduct -> {
-                    orderedProduct.setOrderId(newOrderedProduct.getOrderId());
-                    orderedProduct.setProductId(newOrderedProduct.getProductId());
+                    orderedProduct.setOrder_id(newOrderedProduct.getOrder_id());
+                    orderedProduct.setProduct_id(newOrderedProduct.getProduct_id());
                     orderedProduct.setQuantity(newOrderedProduct.getQuantity());
                     return orderedProductRepository.save(orderedProduct);
                 })

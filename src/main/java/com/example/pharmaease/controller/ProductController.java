@@ -3,6 +3,7 @@ package com.example.pharmaease.controller;
 import com.example.pharmaease.model.Product;
 import com.example.pharmaease.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +33,22 @@ public class ProductController {
     Product getProductById(@PathVariable Integer id) {
 
         return productRepository.findById(id)
+                .map(product -> {
+                    // Force lazy loading of the userType
+                    product.getCategory_id().getName(); // This triggers the database query
+                    return product;
+                })
                 .orElseThrow();
+
+        // return productRepository.findById(id)
+        // .orElseThrow();
     }
 
     @PostMapping
-    Product newProduct(@RequestBody Product newProduct) {
-        return productRepository.save(newProduct);
+    ResponseEntity<String> newProduct(@RequestBody Product newProduct) {
+        productRepository.save(newProduct);
+
+        return ResponseEntity.ok("Product created successfully");
     }
 
     @PutMapping("/{id}")

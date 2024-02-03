@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,8 +16,13 @@ public class OrderedProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer orderId;
-    private Integer productId;
+    @ManyToOne
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order_id;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product_id;
+
     private Integer quantity;
 
     public Integer getId() {
@@ -26,20 +33,12 @@ public class OrderedProduct {
         this.id = id;
     }
 
-    public Integer getOrderId() {
-        return orderId;
+    public Product getProduct_id() {
+        return product_id;
     }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setProduct_id(Product product_id) {
+        this.product_id = product_id;
     }
 
     public Integer getQuantity() {
@@ -48,6 +47,14 @@ public class OrderedProduct {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Order getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(Order order_id) {
+        this.order_id = order_id;
     }
 
 }

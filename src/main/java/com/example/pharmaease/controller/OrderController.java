@@ -1,9 +1,16 @@
 package com.example.pharmaease.controller;
 
 import com.example.pharmaease.model.Order;
+import com.example.pharmaease.model.OrderCreateRequest;
+import com.example.pharmaease.model.OrderedProduct;
 import com.example.pharmaease.repository.OrderRepository;
+import com.example.pharmaease.repository.OrderedProductRepository;
+import com.example.pharmaease.service.OrderService;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderRepository orderRepository;
+    private final OrderedProductRepository orderedProductRepository;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository) {
+    public OrderController(OrderRepository orderRepository, OrderService orderService,
+            OrderedProductRepository orderedProductRepository) {
         this.orderRepository = orderRepository;
+        this.orderService = orderService;
+        this.orderedProductRepository = orderedProductRepository;
     }
 
     @GetMapping
@@ -33,12 +45,32 @@ public class OrderController {
     Order getOrderById(@PathVariable Integer id) {
 
         return orderRepository.findById(id)
+                .map(order -> {
+                    // Force lazy loading of the userType
+                    order.getUser_id().getUsername(); // This triggers the database query
+                    return order;
+                })
                 .orElseThrow();
     }
 
+    @GetMapping("/{orderId}/orderedProducts")
+    public List<OrderedProduct> getOrderProductsByOrderId(@PathVariable Integer orderId) {
+
+        // Retrieve order products associated with the order
+        return orderedProductRepository.findByOrder_id(orderId);
+    }
+
     @PostMapping
-    Order newOrder(@RequestBody Order newOrder) {
-        return orderRepository.save(newOrder);
+    ResponseEntity<String> newOrder(@RequestBody OrderCreateRequest orderCreateRequest) {
+        Order createdOrder = orderCreateRequest.getNewOrder();
+        orderRepository.save(createdOrder);
+
+        List<Integer> productIds = orderCreateRequest.getProductIds();
+        List<Integer> quantities = orderCreateRequest.getQuantities();
+
+        orderService.createOrderWithProducts(createdOrder, productIds, quantities);
+
+        return ResponseEntity.ok("Order and associated products created successfully");
     }
 
     @PutMapping("/{id}")
@@ -46,9 +78,9 @@ public class OrderController {
 
         return orderRepository.findById(id)
                 .map(order -> {
-                    order.setUserId(newOrder.getUserId());
-                    order.setTotalPrice(newOrder.getTotalPrice());
-                    order.setUserId(newOrder.getUserId());
+                    order.setUser_id(newOrder.getUser_id());
+                    order.setTotal_price(newOrder.getTotal_price());
+                    order.setUser_id(newOrder.getUser_id());
                     return orderRepository.save(order);
                 })
                 .orElseThrow();

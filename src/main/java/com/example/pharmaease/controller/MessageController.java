@@ -33,6 +33,11 @@ public class MessageController {
     Message getMessageById(@PathVariable Integer id) {
 
         return messageRepository.findById(id)
+                .map(message -> {
+                    // Force lazy loading of the userType
+                    message.getUser_id().getUsername(); // This triggers the database query
+                    return message;
+                })
                 .orElseThrow();
     }
 
@@ -47,7 +52,7 @@ public class MessageController {
         return messageRepository.findById(id)
                 .map(message -> {
                     message.setMessage(newMessage.getMessage());
-                    message.setUserId(newMessage.getUserId());
+                    message.setUser_id(newMessage.getUser_id());
                     return messageRepository.save(message);
                 })
                 .orElseThrow();

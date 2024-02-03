@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,10 +16,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Integer type;
+    @OneToOne
+    @JoinColumn(name = "type", referencedColumnName = "id")
+    private UserType type;
+
+    private String first_name;
+    private String last_name;
     private String username;
     private String email;
     private String password;
+    private String phone_number;
 
     public Integer getId() {
         return id;
@@ -25,14 +33,6 @@ public class User {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
     }
 
     public String getUsername() {
@@ -57,6 +57,38 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserType getType() {
+        return type;
+    }
+
+    public void setType(UserType userType) {
+        this.type = userType;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
     }
 
 }

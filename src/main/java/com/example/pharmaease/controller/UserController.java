@@ -2,8 +2,10 @@ package com.example.pharmaease.controller;
 
 import com.example.pharmaease.model.User;
 import com.example.pharmaease.repository.UserRepository;
+import com.example.pharmaease.service.EncryptionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository userRepository;
+    private EncryptionService passwordEncoder;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, EncryptionService passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -33,12 +37,25 @@ public class UserController {
     User getUserById(@PathVariable Integer id) {
 
         return userRepository.findById(id)
+                .map(user -> {
+                    // Force lazy loading of the userType
+                    user.getType().getName(); // This triggers the database query
+                    return user;
+                })
                 .orElseThrow();
+
+        // return userRepository.findById(id)
+        // .orElseThrow();
     }
 
     @PostMapping
-    User newUser(@RequestBody User newUser) {
-        return userRepository.save(newUser);
+    ResponseEntity<String> newUser(@RequestBody User newUser) {
+        String encryptedPassword = passwordEncoder.encryptString(newUser.getPassword());
+        newUser.setPassword(encryptedPassword);
+
+        userRepository.save(newUser);
+
+        return ResponseEntity.ok("User created successfully");
     }
 
     @PutMapping("/{id}")
@@ -48,7 +65,9 @@ public class UserController {
                 .map(user -> {
                     user.setUsername(newUser.getUsername());
                     user.setEmail(newUser.getEmail());
-                    user.setPassword(newUser.getPassword()); // TO DO: add a secure way to store passwords
+                    user.setPassword(passwordEncoder.encryptString(newUser.getPassword())); // TO DO: add a secure way
+                                                                                            // to store
+                    // passwords
                     return userRepository.save(user);
                 })
                 .orElseThrow();
