@@ -88,6 +88,14 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     void deleteOrder(@PathVariable Integer id) {
+        Order order = orderRepository.findById(id).orElseThrow();
+
+        List<OrderedProduct> orderProducts = order.getOrderedProducts();
+
+        // Delete related orderProducts
+        orderProducts.forEach(orderedProductRepository::delete);
+
+        // Now, delete the order
         orderRepository.deleteById(id);
     }
 
