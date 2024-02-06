@@ -1,9 +1,9 @@
 package com.example.pharmaease;
 
-import com.example.pharmaease.model.Category;
-import com.example.pharmaease.model.Product;
-import com.example.pharmaease.repository.CategoryRepository;
-import com.example.pharmaease.repository.ProductRepository;
+import com.example.pharmaease.models.Category;
+import com.example.pharmaease.models.Product;
+import com.example.pharmaease.repositories.CategoryRepository;
+import com.example.pharmaease.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
