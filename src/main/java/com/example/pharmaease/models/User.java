@@ -99,7 +99,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(role == null) {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        } {
         return List.of(new SimpleGrantedAuthority(role.name()));
+        }
     }
 
     @Override

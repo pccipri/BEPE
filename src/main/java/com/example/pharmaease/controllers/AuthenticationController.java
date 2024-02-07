@@ -39,7 +39,6 @@ public class AuthenticationController {
         } else {
             return "Token invalid";
         }
-
     }
 
     @GetMapping("/onlyusers")
