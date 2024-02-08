@@ -34,14 +34,10 @@ public class ProductController {
 
         return productRepository.findById(id)
                 .map(product -> {
-                    // Force lazy loading of the userType
                     product.getCategory_id().getName(); // This triggers the database query
                     return product;
                 })
                 .orElseThrow();
-
-        // return productRepository.findById(id)
-        // .orElseThrow();
     }
 
     @PostMapping

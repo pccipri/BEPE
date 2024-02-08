@@ -34,7 +34,6 @@ public class MessageController {
 
         return messageRepository.findById(id)
                 .map(message -> {
-                    // Force lazy loading of the userType
                     message.getUser_id().getUsername(); // This triggers the database query
                     return message;
                 })

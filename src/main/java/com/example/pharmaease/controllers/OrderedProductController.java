@@ -34,7 +34,6 @@ public class OrderedProductController {
 
         return orderedProductRepository.findById(id)
                 .map(orderedProduct -> {
-                    // Force lazy loading of the userType
                     orderedProduct.getOrder_id().getTotal_price();
                     orderedProduct.getProduct_id().getName(); // This triggers the database query
                     return orderedProduct;

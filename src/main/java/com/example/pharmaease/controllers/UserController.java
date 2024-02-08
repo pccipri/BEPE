@@ -38,14 +38,10 @@ public class UserController {
 
         return userRepository.findById(id)
                 .map(user -> {
-                    // Force lazy loading of the userType
                     user.getFirst_name(); // This triggers the database query
                     return user;
                 })
                 .orElseThrow();
-
-        // return userRepository.findById(id)
-        // .orElseThrow();
     }
 
     @PostMapping
@@ -68,9 +64,7 @@ public class UserController {
                     user.setLast_name(newUser.getLast_name());
                     user.setPhone_number(newUser.getPhone_number());
                     user.setRole(newUser.getRole());
-                    user.setPassword(passwordEncoder.encryptString(newUser.getPassword())); // TO DO: add a secure way
-                                                                                            // to store
-                    // passwords
+                    user.setPassword(passwordEncoder.encryptString(newUser.getPassword()));
                     return userRepository.save(user);
                 })
                 .orElseThrow();

@@ -1,7 +1,6 @@
 package com.example.pharmaease;
 
 import com.example.pharmaease.models.Category;
-import com.example.pharmaease.models.Product;
 import com.example.pharmaease.repositories.CategoryRepository;
 import com.example.pharmaease.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,6 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Your database interaction code here
-        // Iterable<Product> products = productRepository.findAll();
-        // for (Product product : products) {
-        // System.out.println("Product Name: " + product.getName());
-        // }
 
         Iterable<Category> categories = categoryRepository.findAll();
 

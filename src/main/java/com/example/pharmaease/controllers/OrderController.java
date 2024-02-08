@@ -46,7 +46,6 @@ public class OrderController {
 
         return orderRepository.findById(id)
                 .map(order -> {
-                    // Force lazy loading of the userType
                     order.getUser_id().getUsername(); // This triggers the database query
                     return order;
                 })
