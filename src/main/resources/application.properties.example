@@ -7,5 +7,12 @@ spring.datasource.password=
 #DB Driver type(this example is for mariadb)
 spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 
+# JWT secret key
+# node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" - command for generating a random key
+token.secret.key=
+
+# JWT expiration time in milliseconds
+token.expirationms=3600000 - 1 hour
+
 #After completing with your DB connection information remove the .example part of the file name
 # The name of the file should be application-dev.properties
