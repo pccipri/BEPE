@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,6 +42,7 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
     private String phone_number;
 
@@ -99,10 +101,11 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(role == null) {
+        if (role == null) {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        } {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        }
+        {
+            return List.of(new SimpleGrantedAuthority(role.name()));
         }
     }
 
