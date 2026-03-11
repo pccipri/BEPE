@@ -1,10 +1,6 @@
-# Pharma Ease Backend (BEPE)
+# Overview
 
 Pharma Ease Backend is a Java Spring Boot REST API. It provides authentication, user management, product and category management, order processing, and message handling for the frontend application.
-
-## Overview
-
-This project is the backend service for the Pharma Ease application. It exposes REST endpoints for both customer-facing and admin-facing operations and uses JWT-based authentication with Spring Security.
 
 The API supports:
 
